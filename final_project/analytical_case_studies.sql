@@ -1,54 +1,54 @@
 -- ====================================================================
--- 🎓 DAY 29 & 30: FINAL SHOWCASE ANALYTICAL REPORT
+-- 🎓 FINAL SHOWCASE ANALYTICAL REPORT (Chinook DB)
 -- ====================================================================
 
 -- 📊 CASE STUDY 1: Lifetime Cohort Revenue Yield
--- Task: Group users by their signup country, calculating registration volume, 
--- active order volume, total lifetime spend, and average customer lifetime value (CLV).
-SELECT u.country,
-       COUNT(DISTINCT u.user_id) AS registration_volume,
-       COUNT(o.order_id) AS active_orders,
-       SUM(o.total_amount) AS cumulative_revenue,
-       (SUM(o.total_amount) / COUNT(DISTINCT u.user_id)) AS customer_lifetime_value
-FROM users u
-INNER JOIN orders o ON u.user_id = o.user_id
-GROUP BY u.country
-ORDER BY cumulative_revenue DESC;
+-- Task: Group customers by their country, calculating customer volume, 
+-- active invoices volume, total cumulative spend, and average customer lifetime value (CLV).
+SELECT c.Country,
+       COUNT(DISTINCT c.CustomerId) AS CustomerVolume,
+       COUNT(i.InvoiceId) AS ActiveInvoices,
+       SUM(i.Total) AS CumulativeRevenue,
+       (SUM(i.Total) / COUNT(DISTINCT c.CustomerId)) AS CustomerLifetimeValue
+FROM Customer c
+INNER JOIN Invoice i ON c.CustomerId = i.CustomerId
+GROUP BY c.Country
+ORDER BY CumulativeRevenue DESC;
 
 
--- 📊 CASE STUDY 2: Monthly E-Commerce Revenue Growth Velocity
--- Task: Extract month-by-month transaction volumes, total revenue, average order size, 
+-- 📊 CASE STUDY 2: Monthly Revenue Growth Velocity
+-- Task: Extract month-by-month transaction volumes, total revenue, average invoice size, 
 -- and utilize window functions to display previous month's revenue and calculated growth pacing.
 WITH MonthlySales AS (
-    SELECT STRFTIME('%Y-%m', order_date) AS sales_period,
-           COUNT(order_id) AS order_volume,
-           SUM(total_amount) AS absolute_revenue,
-           AVG(total_amount) AS average_ticket
-    FROM orders
-    GROUP BY sales_period
+    SELECT STRFTIME('%Y-%m', InvoiceDate) AS SalesPeriod,
+           COUNT(InvoiceId) AS InvoiceVolume,
+           SUM(Total) AS AbsoluteRevenue,
+           AVG(Total) AS AverageTicket
+    FROM Invoice
+    GROUP BY SalesPeriod
 )
-SELECT sales_period,
-       order_volume,
-       absolute_revenue,
-       average_ticket,
-       LAG(absolute_revenue, 1) OVER (ORDER BY sales_period ASC) AS previous_period_revenue,
-       (absolute_revenue - LAG(absolute_revenue, 1) OVER (ORDER BY sales_period ASC)) AS net_growth
+SELECT SalesPeriod,
+       InvoiceVolume,
+       AbsoluteRevenue,
+       AverageTicket,
+       LAG(AbsoluteRevenue, 1) OVER (ORDER BY SalesPeriod ASC) AS PreviousPeriodRevenue,
+       (AbsoluteRevenue - LAG(AbsoluteRevenue, 1) OVER (ORDER BY SalesPeriod ASC)) AS NetGrowth
 FROM MonthlySales
-ORDER BY sales_period ASC;
+ORDER BY SalesPeriod ASC;
 
 
--- 📊 CASE STUDY 3: Product Category Margin & Inventory Audit
--- Task: Audit product performance by calculating total items sold, total revenue, 
+-- 📊 CASE STUDY 3: Track Category Margin & Purchase Audit
+-- Task: Audit track performance by calculating total items sold, total revenue, 
 -- and utilizing conditional logic to flag low-performing vs high-performing items.
-SELECT p.product_id, p.product_name, p.price,
-       SUM(oi.quantity) AS units_sold,
-       SUM(oi.quantity * oi.unit_price) AS category_revenue,
+SELECT t.TrackId, t.Name AS TrackName, t.UnitPrice,
+       SUM(il.Quantity) AS UnitsSold,
+       SUM(il.Quantity * il.UnitPrice) AS TrackRevenue,
        CASE 
-           WHEN SUM(oi.quantity) >= 100 THEN 'Flagship Seller'
-           WHEN SUM(oi.quantity) BETWEEN 20 AND 99 THEN 'Steady Contributor'
+           WHEN SUM(il.Quantity) >= 10 THEN 'Flagship Seller'
+           WHEN SUM(il.Quantity) BETWEEN 3 AND 9 THEN 'Steady Contributor'
            ELSE 'Slow Moving Asset'
-       END AS performance_tier
-FROM products p
-LEFT JOIN order_items oi ON p.product_id = oi.product_id
-GROUP BY p.product_id, p.product_name, p.price
-ORDER BY category_revenue DESC;
+       END AS PerformanceTier
+FROM Track t
+LEFT JOIN InvoiceLine il ON t.TrackId = il.TrackId
+GROUP BY t.TrackId, t.Name, t.UnitPrice
+ORDER BY TrackRevenue DESC;

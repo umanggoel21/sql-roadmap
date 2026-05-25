@@ -8,7 +8,7 @@
       <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintained">
     </a>
     <a href="https://www.postgresql.org/">
-      <img src="https://img.shields.io/badge/Dialects-PostgreSQL%20%7C%20MySQL%20%7C%20BigQuery%20%7C%20T--SQL-blue.svg" alt="SQL Dialects">
+      <img src="https://img.shields.io/badge/Dialects-SQLite%20%7C%20PostgreSQL%20%7C%20MySQL%20%7C%20BigQuery%20%7C%20T--SQL-blue.svg" alt="SQL Dialects">
     </a>
     <a href="https://github.com/umanggoel21/sql-roadmap/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
@@ -20,320 +20,432 @@
 
 ## 📖 Overview
 
-This is a **30-day SQL curriculum** that takes you from writing your first `SELECT` to building analytical reports with window functions and CTEs. All examples use a universal E-Commerce schema and include dialect notes for **PostgreSQL, MySQL, SQLite, SQL Server, and BigQuery** where syntax differs.
+A **6-phase SQL curriculum** designed to take you from absolute zero to job-ready for Data Analytics and Engineering. 
+
+All practical learning phases (Phase 2 to 5) and the Final Showcase Project run against the **Chinook Database**—a premium, industry-standard digital media store schema already packaged natively in the root of this repository as `Chinook_Sqlite.sqlite`. You can connect, run, and experiment with queries **instantly out-of-the-box** without loading complex DDL or seed scripts!
 
 ---
 
 ## 📑 Table of Contents
 
 - [📖 Overview](#-overview)
-- [📅 Week 1 — Foundations](#-week-1--foundations)
-- [📅 Week 2 — Aggregations](#-week-2--aggregations)
-- [📅 Week 3 — Joins & Grouping](#-week-3--joins--grouping)
-- [📅 Week 4 — Advanced SQL](#-week-4--advanced-sql)
+- [🚀 Getting Started](#-getting-started)
+- [📚 Phase 1 — Foundations](#-phase-1--foundations)
+- [📚 Phase 2 — Core Querying](#-phase-2--core-querying)
+- [📚 Phase 3 — Aggregations](#-phase-3--aggregations)
+- [📚 Phase 4 — Joins](#-phase-4--joins)
+- [📚 Phase 5 — Advanced SQL](#-phase-5--advanced-sql)
+- [📚 Phase 6 — Industry Skills](#-phase-6--industry-skills)
 - [🎓 Final Project — Case Studies](#-final-project--case-studies)
+- [🧩 LeetCode Practice](#-leetcode-practice)
 - [⚠️ Common Mistakes](#️-common-mistakes)
 - [⚙️ Dialect Differences](#️-dialect-differences)
-- [🚀 Getting Started](#-getting-started)
 - [🤝 Contributing](#-contributing)
 
+---
 
+## 🚀 Getting Started
 
-## 📅 Week 1 — Foundations
-> Source files: [`week1/`](./week1)
+### Step 1 — Clone the Repository
+```bash
+git clone https://github.com/umanggoel21/sql-roadmap.git
+cd sql-roadmap
+```
+
+### Step 2 — Open the Database
+No complex setup is needed. We recommend **DBeaver** (free, cross-platform database tool):
+1. Download & open [DBeaver Community](https://dbeaver.io/download/).
+2. Click **Database → New Connection** and select **SQLite**.
+3. In the path field, click browse and select the `Chinook_Sqlite.sqlite` file in the root of your cloned repository.
+4. Click **Finish**. You are ready to open SQL Editor and start querying!
+
+### Step 3 — Verify Your Connection
+Run this test query to ensure everything is working:
+```sql
+SELECT 'Customer' AS TableName, COUNT(*) FROM Customer
+UNION ALL
+SELECT 'Track',                  COUNT(*) FROM Track
+UNION ALL
+SELECT 'Invoice',                COUNT(*) FROM Invoice;
+-- Expected Row Counts: Customer: 59, Track: 3503, Invoice: 412
+```
+
+### 📊 Chinook Database ER Diagram
+
+Below is the complete database structure you'll be working with. Hover over tables or relationships to see keys and cardinality!
+
+```mermaid
+erDiagram
+    Artist ||--o{ Album : "ArtistId"
+    Album ||--o{ Track : "AlbumId"
+    MediaType ||--o{ Track : "MediaTypeId"
+    Genre ||--o{ Track : "GenreId"
+    Track ||--o{ InvoiceLine : "TrackId"
+    Invoice ||--o{ InvoiceLine : "InvoiceId"
+    Customer ||--o{ Invoice : "CustomerId"
+    Employee ||--o{ Customer : "SupportRepId"
+    Employee ||--o{ Employee : "ReportsTo"
+    Playlist ||--o{ PlaylistTrack : "PlaylistId"
+    Track ||--o{ PlaylistTrack : "TrackId"
+
+    Artist {
+        int ArtistId PK
+        string Name
+    }
+
+    Album {
+        int AlbumId PK
+        string Title
+        int ArtistId FK
+    }
+
+    Track {
+        int TrackId PK
+        string Name
+        int AlbumId FK
+        int MediaTypeId FK
+        int GenreId FK
+        string Composer
+        int Milliseconds
+        int Bytes
+        numeric UnitPrice
+    }
+
+    MediaType {
+        int MediaTypeId PK
+        string Name
+    }
+
+    Genre {
+        int GenreId PK
+        string Name
+    }
+
+    InvoiceLine {
+        int InvoiceLineId PK
+        int InvoiceId FK
+        int TrackId FK
+        numeric UnitPrice
+        int Quantity
+    }
+
+    Invoice {
+        int InvoiceId PK
+        int CustomerId FK
+        datetime InvoiceDate
+        string BillingAddress
+        string BillingCity
+        string BillingState
+        string BillingCountry
+        string BillingPostalCode
+        numeric Total
+    }
+
+    Customer {
+        int CustomerId PK
+        string FirstName
+        string LastName
+        string Company
+        string Address
+        string City
+        string State
+        string Country
+        string PostalCode
+        string Phone
+        string Fax
+        string Email
+        int SupportRepId FK
+    }
+
+    Employee {
+        int EmployeeId PK
+        string LastName
+        string FirstName
+        string Title
+        int ReportsTo FK
+        datetime BirthDate
+        datetime HireDate
+        string Address
+        string City
+        string State
+        string Country
+        string PostalCode
+        string Phone
+        string Fax
+        string Email
+    }
+
+    Playlist {
+        int PlaylistId PK
+        string Name
+    }
+
+    PlaylistTrack {
+        int PlaylistId PK, FK
+        int TrackId PK, FK
+    }
+```
+
+---
+
+## 📚 Phase 1 — Foundations
+> Source files: [`phase1_foundations/`](./phase1_foundations)
+
+Before writing queries, understand the *why* behind them.
+- What is a relational database — tables, rows, columns, keys
+- The Chinook Database Playground — understanding the schema
+- **SQL execution order** — the most misunderstood concept for beginners
+
+**→ [Read Phase 1 README](./phase1_foundations/README.md)**
+
+---
+
+## 📚 Phase 2 — Core Querying
+> Source files: [`phase2_core_querying/`](./phase2_core_querying)
 
 ### Day 1 — SELECT Basics
-Retrieve data from tables. Select all columns, specific columns, count rows, and limit output.
 ```sql
-SELECT * FROM users;
-SELECT first_name, email FROM users;
-SELECT COUNT(user_id) AS total_users FROM users;
-SELECT product_name FROM products LIMIT 10;
+SELECT * FROM Customer;
+SELECT FirstName, LastName, Email FROM Customer;
+SELECT COUNT(CustomerId) AS TotalCustomers FROM Customer;
+SELECT Name, UnitPrice FROM Track LIMIT 10;
 ```
 
 ### Day 2 — DISTINCT & NULL Logic
-Extract unique values and understand three-valued logic. `NULL` is not a value — it means "unknown."
 ```sql
-SELECT DISTINCT country FROM users;
-SELECT user_id, email FROM users WHERE country IS NULL;
-SELECT user_id, email FROM users WHERE country IS NOT NULL;
+SELECT DISTINCT Country FROM Customer;
+SELECT CustomerId, Company FROM Customer WHERE Company IS NULL;
+SELECT CustomerId, Company FROM Customer WHERE Company IS NOT NULL;
 ```
-> **Rule:** Never write `WHERE col = NULL`. It always returns zero rows. Use `IS NULL`.
 
 ### Day 3 — Comparison Filters
-Filter rows using `=`, `<>`, `>`, `<`, `>=`, `<=`.
 ```sql
-SELECT product_name, price FROM products WHERE price > 100.00;
-SELECT user_id, country FROM users WHERE country = 'USA';
-SELECT order_id, status FROM orders WHERE status <> 'Completed';
+SELECT TrackId, Name, UnitPrice FROM Track WHERE UnitPrice > 0.99;
+SELECT CustomerId, Country FROM Customer WHERE Country = 'USA';
+SELECT InvoiceId, Total, BillingCountry FROM Invoice WHERE BillingCountry <> 'USA';
 ```
 
 ### Day 4 — AND, OR, NOT & Precedence
-Combine conditions. `AND` executes before `OR` — always use parentheses to be explicit.
 ```sql
--- Without parentheses: this does NOT do what you'd expect
-SELECT * FROM products WHERE category_id = 1 OR category_id = 2 AND price < 50;
-
--- Correct: group the OR condition
-SELECT * FROM products WHERE (category_id = 1 OR category_id = 2) AND price < 50;
+SELECT TrackId, Name, UnitPrice, GenreId
+FROM Track
+WHERE (GenreId = 1 OR GenreId = 2) AND UnitPrice < 1.00;
 ```
 
 ### Day 5 — BETWEEN & IN
-Simplify range checks and list matching.
 ```sql
-SELECT * FROM products WHERE price BETWEEN 10.00 AND 50.00;
-SELECT * FROM users WHERE country IN ('Germany', 'France', 'Italy');
+SELECT TrackId, Name, UnitPrice FROM Track WHERE UnitPrice BETWEEN 0.99 AND 1.99;
+SELECT CustomerId, FirstName, Country FROM Customer WHERE Country IN ('Germany', 'France', 'United Kingdom');
 ```
 
 ### Day 6 — LIKE Patterns
-Match strings using `%` (any characters) and `_` (one character).
 ```sql
-SELECT email FROM users WHERE email LIKE '%@gmail.com';
-SELECT product_name FROM products WHERE product_name LIKE 'Super%';
+SELECT CustomerId, Email FROM Customer WHERE Email LIKE '%@yahoo.com';
+SELECT TrackId, Name FROM Track WHERE Name LIKE 'Love%';
 ```
 
-### Day 7 — Week 1 Practice
-Combine everything learned into multi-condition business queries. ([Solutions](./week1/day07_practice.sql))
+### Day 7 — Phase 2 Practice
+Combine concepts into practical customer and catalogue audits. ([Solutions](./phase2_core_querying/day07_practice.sql))
 
 ---
 
-## 📅 Week 2 — Aggregations
-> Source files: [`week2/`](./week2)
+## 📚 Phase 3 — Aggregations
+> Source files: [`phase3_aggregations/`](./phase3_aggregations)
 
 ### Day 8 — ORDER BY
-Sort results by one or more columns, ascending or descending.
 ```sql
-SELECT country, email FROM users ORDER BY country ASC, email DESC;
-SELECT product_name, price FROM products ORDER BY price DESC;
+SELECT Country, LastName, FirstName FROM Customer ORDER BY Country ASC, LastName DESC;
+SELECT TrackId, Name, UnitPrice FROM Track ORDER BY UnitPrice DESC;
 ```
 
 ### Day 9 — LIMIT & OFFSET (Pagination)
-Page through results. Syntax varies by dialect.
 ```sql
--- PostgreSQL, MySQL, SQLite, BigQuery
-SELECT product_name, price FROM products ORDER BY price DESC LIMIT 5 OFFSET 5;
-
--- SQL Server (T-SQL)
--- SELECT product_name, price FROM products ORDER BY price DESC
--- OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY;
+SELECT Name, UnitPrice FROM Track ORDER BY TrackId ASC LIMIT 5 OFFSET 5;
 ```
 
 ### Day 10 — COALESCE & Null Handling
-Replace NULL values with fallback defaults.
 ```sql
-SELECT user_id, COALESCE(country, 'Not Provided') AS shipping_country FROM users;
+SELECT CustomerId, FirstName, COALESCE(Company, 'Individual') AS CustomerType FROM Customer;
 ```
-> **Dialect note:** MySQL/SQLite also support `IFNULL()`. T-SQL uses `ISNULL()`.
 
 ### Day 11 — COUNT, SUM, AVG
-Aggregate math across rows.
 ```sql
-SELECT COUNT(user_id) AS total_users FROM users;
-SELECT SUM(total_amount) AS lifetime_revenue FROM orders;
-SELECT AVG(total_amount) AS avg_order_value FROM orders;
+SELECT COUNT(Country) AS ActiveCountryRecords FROM Customer;
+SELECT SUM(Total) AS LifetimeTotalSales FROM Invoice;
+SELECT AVG(Total) AS AverageInvoiceValue FROM Invoice;
 ```
 
 ### Day 12 — MIN & MAX
-Find boundary values.
 ```sql
-SELECT MIN(price) AS cheapest, MAX(price) AS most_expensive FROM products;
-SELECT MIN(order_date) AS first_order, MAX(order_date) AS latest_order FROM orders;
+SELECT MIN(UnitPrice) AS CheapestItem, MAX(UnitPrice) AS FlagshipItem FROM Track;
+SELECT MIN(InvoiceDate) AS FirstSale, MAX(InvoiceDate) AS RecentSale FROM Invoice;
 ```
 
 ### Day 13 — Aliases (AS)
-Give columns readable names. Format calculated outputs.
 ```sql
-SELECT user_id, (first_name || ' ' || last_name) AS full_name FROM users;
-SELECT SUM(total_amount) AS revenue, COUNT(order_id) AS orders FROM orders;
+SELECT CustomerId, (FirstName || ' ' || LastName) AS FullName FROM Customer;
 ```
 
-### Day 14 — Week 2 Practice
-Pagination ranking, financial summaries, null-replacement reports. ([Solutions](./week2/day14_practice.sql))
+### Day 14 — Phase 3 Practice
+Sales summary dashboards, paginated list outputs, and address audits. ([Solutions](./phase3_aggregations/day14_practice.sql))
 
 ---
 
-## 📅 Week 3 — Joins & Grouping
-> Source files: [`week3/`](./week3)
+## 📚 Phase 4 — Joins
+> Source files: [`phase4_joins/`](./phase4_joins)
 
 ### Day 15 — GROUP BY
-Bucket rows into categories and aggregate each group.
 ```sql
-SELECT country, COUNT(user_id) AS user_count
-FROM users GROUP BY country ORDER BY user_count DESC;
+SELECT Country, COUNT(CustomerId) AS CustomerCount FROM Customer GROUP BY Country ORDER BY CustomerCount DESC;
 ```
 
 ### Day 16 — HAVING
-Filter groups after aggregation. `WHERE` filters rows. `HAVING` filters groups.
 ```sql
-SELECT country, COUNT(user_id) AS user_count
-FROM users GROUP BY country HAVING COUNT(user_id) > 50;
+SELECT Country, COUNT(CustomerId) AS CustomerCount FROM Customer GROUP BY Country HAVING COUNT(CustomerId) > 4;
 ```
 
 ### Day 17 — Multi-Column Grouping
-Group by multiple dimensions at once.
 ```sql
-SELECT order_date, status, COUNT(order_id) AS volume
-FROM orders GROUP BY order_date, status;
+SELECT Country, State, COUNT(CustomerId) FROM Customer WHERE State IS NOT NULL GROUP BY Country, State;
 ```
 
 ### Day 18 — INNER JOIN
-Link rows across tables where keys match. Unmatched rows are excluded.
 ```sql
-SELECT o.order_id, o.total_amount, u.first_name, u.email
-FROM orders o
-INNER JOIN users u ON o.user_id = u.user_id;
+SELECT i.InvoiceId, i.Total, c.FirstName, c.LastName
+FROM Invoice i INNER JOIN Customer c ON i.CustomerId = c.CustomerId;
 
 -- Chain 3 tables
-SELECT oi.item_id, p.product_name, oi.quantity
-FROM order_items oi
-INNER JOIN orders o ON oi.order_id = o.order_id
-INNER JOIN products p ON oi.product_id = p.product_id;
+SELECT il.InvoiceLineId, t.Name AS TrackName, il.UnitPrice
+FROM InvoiceLine il
+INNER JOIN Invoice i ON il.InvoiceId = i.InvoiceId
+INNER JOIN Track t ON il.TrackId = t.TrackId;
 ```
 
 ### Day 19 — LEFT JOIN
-Keep all rows from the left table. Unmatched right-side rows become NULL. Great for finding "missing" data.
 ```sql
--- Find users who have never ordered
-SELECT u.user_id, u.email
-FROM users u
-LEFT JOIN orders o ON u.user_id = o.user_id
-WHERE o.order_id IS NULL;
+SELECT c.CustomerId, c.FirstName, c.LastName
+FROM Customer c LEFT JOIN Invoice i ON c.CustomerId = i.CustomerId
+WHERE i.InvoiceId IS NULL;
 ```
 
 ### Day 20 — SELF JOIN
-Join a table to itself. Used for hierarchies like org charts.
 ```sql
-SELECT emp.first_name AS employee, mgr.first_name AS manager
-FROM employees emp
-LEFT JOIN employees mgr ON emp.reports_to = mgr.employee_id;
+SELECT emp.FirstName || ' ' || emp.LastName AS Employee,
+       mgr.FirstName || ' ' || mgr.LastName AS Manager
+FROM Employee emp
+LEFT JOIN Employee mgr ON emp.ReportsTo = mgr.EmployeeId;
 ```
 
-### Day 21 — Week 3 Practice
-Revenue by category, inactive products, active buyer cohorts. ([Solutions](./week3/day21_practice.sql))
+### Day 21 — Phase 4 Practice
+Genre revenue performance, self-referencing reporting directories, and catalog coverage. ([Solutions](./phase4_joins/day21_practice.sql))
 
 ---
 
-## 📅 Week 4 — Advanced SQL
-> Source files: [`week4/`](./week4)
+## 📚 Phase 5 — Advanced SQL
+> Source files: [`phase5_advanced/`](./phase5_advanced)
 
 ### Day 22 — Subqueries
-Nest a query inside another query. Can appear in `WHERE`, `SELECT`, or `FROM`.
 ```sql
--- WHERE subquery: orders above average
-SELECT order_id, total_amount FROM orders
-WHERE total_amount > (SELECT AVG(total_amount) FROM orders);
+-- WHERE subquery
+SELECT InvoiceId, Total FROM Invoice WHERE Total > (SELECT AVG(Total) FROM Invoice);
 
--- Correlated subquery: each user's last order date
-SELECT u.user_id, u.email,
-       (SELECT MAX(o.order_date) FROM orders o WHERE o.user_id = u.user_id) AS last_order
-FROM users u;
+-- Correlated subquery
+SELECT c.CustomerId, c.Email,
+       (SELECT MAX(i.InvoiceDate) FROM Invoice i WHERE i.CustomerId = c.CustomerId) AS LastInvoice
+FROM Customer c;
 ```
 
 ### Day 23 — EXISTS & NOT EXISTS
-Check whether matching rows exist. Faster than `IN` for large datasets because it short-circuits.
 ```sql
--- Users with at least one high-value order
-SELECT u.user_id, u.email FROM users u
-WHERE EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.user_id AND o.total_amount > 500);
-
--- Products never sold
-SELECT p.product_name FROM products p
-WHERE NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.product_id = p.product_id);
+SELECT c.CustomerId, c.Email FROM Customer c
+WHERE EXISTS (SELECT 1 FROM Invoice i WHERE i.CustomerId = c.CustomerId AND i.Total > 15.00);
 ```
 
 ### Day 24 — UNION & UNION ALL
-Stack result sets vertically. `UNION` removes duplicates. `UNION ALL` keeps everything (faster).
 ```sql
-SELECT 'Employee' AS role, first_name, email FROM employees
+SELECT 'Employee' AS Role, FirstName, LastName, Email FROM Employee
 UNION
-SELECT 'Customer' AS role, first_name, email FROM users;
+SELECT 'Customer' AS Role, FirstName, LastName, Email FROM Customer;
 ```
 
 ### Day 25 — CASE WHEN
-Add conditional logic inside queries. Works for row-level labels and pivoting aggregations.
 ```sql
-SELECT product_name, price,
-       CASE
-           WHEN price < 20 THEN 'Budget'
-           WHEN price BETWEEN 20 AND 100 THEN 'Mid-Range'
+SELECT Name AS TrackName, UnitPrice,
+       CASE 
+           WHEN UnitPrice < 0.99 THEN 'Budget'
+           WHEN UnitPrice = 0.99 THEN 'Standard'
            ELSE 'Premium'
-       END AS tier
-FROM products;
-
--- Conditional aggregation (pivot)
-SELECT country,
-       COUNT(CASE WHEN o.status = 'Completed' THEN 1 END) AS completed,
-       COUNT(CASE WHEN o.status = 'Pending' THEN 1 END) AS pending
-FROM users u INNER JOIN orders o ON u.user_id = o.user_id
-GROUP BY country;
+       END AS PriceTier
+FROM Track;
 ```
 
 ### Day 26 — Date Functions
-Extract parts of dates. Syntax varies heavily by dialect.
 ```sql
--- SQLite
-SELECT STRFTIME('%Y', order_date) AS year, SUM(total_amount) AS revenue
-FROM orders GROUP BY year;
-
--- PostgreSQL / BigQuery: EXTRACT(YEAR FROM order_date)
--- MySQL: YEAR(order_date)
--- T-SQL: DATEPART(year, order_date)
+SELECT InvoiceId, STRFTIME('%Y', InvoiceDate) AS InvoiceYear FROM Invoice;
 ```
 
 ### Day 27 — Window Functions
-Perform calculations across rows without collapsing them (unlike `GROUP BY`).
 ```sql
--- Rank products by price within each category
-SELECT product_name, category_id, price,
-       ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY price DESC) AS rank
-FROM products;
-
--- Running total
-SELECT order_id, total_amount,
-       SUM(total_amount) OVER (ORDER BY order_date) AS running_total
-FROM orders;
+-- Partition rankings
+SELECT Name AS TrackName, GenreId, UnitPrice,
+       ROW_NUMBER() OVER (PARTITION BY GenreId ORDER BY UnitPrice DESC) AS GenrePriceRank
+FROM Track;
 ```
 
-### Day 28 — Week 4 Practice
-Customer lifetime tiers (Platinum/Gold/Silver), second-most-expensive product per category using CTEs. ([Solutions](./week4/day28_practice.sql))
+### Day 28 — Phase 5 Practice
+Customer segmentation models, and the second-most-expensive track inside each genre. ([Solutions](./phase5_advanced/day28_practice.sql))
+
+---
+
+## 📚 Phase 6 — Industry Skills
+> Source files: [`phase6_industry/`](./phase6_industry)
+
+What separates a learner from a hireable analyst:
+
+| File | Topic |
+|------|-------|
+| `01_indexes_and_explain.sql` | Indexes + reading EXPLAIN plans |
+| `02_views.sql` | CREATE VIEW vs CTE — when to use what |
+| `03_transactions.sql` | BEGIN / COMMIT / ROLLBACK |
+| `04_schema_design.sql` | 1NF/2NF/3NF normalization + Star Schema |
+| `05_data_quality.sql` | Find duplicates, orphans, NULLs |
+| `06_interview_patterns.sql` | Cohort, retention, funnel, MoM, rolling avg |
+
+**→ [Read Phase 6 README](./phase6_industry/README.md)**
 
 ---
 
 ## 🎓 Final Project — Case Studies
 > Source files: [`final_project/`](./final_project)
 
-### Case Study 1: Customer Lifetime Value by Country
+### Case Study 1: Cohort Spending CLV by Country
 ```sql
-SELECT u.country, COUNT(DISTINCT u.user_id) AS users, SUM(o.total_amount) AS revenue,
-       SUM(o.total_amount) / COUNT(DISTINCT u.user_id) AS avg_clv
-FROM users u INNER JOIN orders o ON u.user_id = o.user_id
-GROUP BY u.country ORDER BY revenue DESC;
+SELECT c.Country, COUNT(DISTINCT c.CustomerId) AS Customers, SUM(i.Total) AS Revenue,
+       SUM(i.Total) / COUNT(DISTINCT c.CustomerId) AS CLV
+FROM Customer c INNER JOIN Invoice i ON c.CustomerId = i.CustomerId
+GROUP BY c.Country ORDER BY Revenue DESC;
 ```
 
-### Case Study 2: Month-over-Month Revenue Growth
+### Case Study 2: Month-over-Month Revenue Growth Velocity
 ```sql
-WITH monthly AS (
-    SELECT STRFTIME('%Y-%m', order_date) AS period,
-           SUM(total_amount) AS revenue
-    FROM orders GROUP BY period
+WITH Monthly AS (
+    SELECT STRFTIME('%Y-%m', InvoiceDate) AS Period, SUM(Total) AS Revenue
+    FROM Invoice GROUP BY Period
 )
-SELECT period, revenue,
-       LAG(revenue) OVER (ORDER BY period) AS prev_month,
-       revenue - LAG(revenue) OVER (ORDER BY period) AS growth
-FROM monthly;
+SELECT Period, Revenue,
+       LAG(Revenue) OVER (ORDER BY Period) AS PrevRevenue,
+       Revenue - LAG(Revenue) OVER (ORDER BY Period) AS NetGrowth
+FROM Monthly;
 ```
 
-### Case Study 3: Product Performance Tiers
-```sql
-SELECT p.product_name, SUM(oi.quantity) AS units_sold,
-       CASE
-           WHEN SUM(oi.quantity) >= 100 THEN 'Top Seller'
-           WHEN SUM(oi.quantity) BETWEEN 20 AND 99 THEN 'Steady'
-           ELSE 'Slow Moving'
-       END AS tier
-FROM products p LEFT JOIN order_items oi ON p.product_id = oi.product_id
-GROUP BY p.product_name ORDER BY units_sold DESC;
-```
+---
+
+## 🧩 LeetCode Practice
+> Source files: [`leetcode/`](./leetcode)
+
+Problems are tagged by phase so you practice each concept right after learning it.
+
+**→ [View LeetCode Problem Index](./leetcode/README.md)**
 
 ---
 
@@ -352,26 +464,25 @@ These are the most frequent errors. Full details in [`notes/common_mistakes.md`]
 
 ## ⚙️ Dialect Differences
 
-| Feature | PostgreSQL | MySQL | BigQuery | SQL Server |
+| Feature | SQLite | PostgreSQL | MySQL | SQL Server |
 | :--- | :--- | :--- | :--- | :--- |
-| **Null Fallback** | `COALESCE` | `IFNULL` | `IFNULL` | `ISNULL` |
-| **Pagination** | `LIMIT x OFFSET y` | `LIMIT y, x` | `LIMIT x OFFSET y` | `OFFSET y ROWS FETCH NEXT x` |
-| **Year from Date** | `EXTRACT(YEAR FROM d)` | `YEAR(d)` | `EXTRACT(YEAR FROM d)` | `DATEPART(year, d)` |
-| **Concatenation** | `col1 \|\| col2` | `CONCAT(col1, col2)` | `CONCAT(col1, col2)` | `col1 + col2` |
+| **Null Fallback** | `COALESCE` / `IFNULL` | `COALESCE` | `COALESCE` / `IFNULL` | `COALESCE` / `ISNULL` |
+| **Pagination** | `LIMIT x OFFSET y` | `LIMIT x OFFSET y` | `LIMIT y, x` | `OFFSET y ROWS FETCH NEXT x` |
+| **Year from Date** | `STRFTIME('%Y', d)` | `EXTRACT(YEAR FROM d)` | `YEAR(d)` | `DATEPART(year, d)` |
+| **Concatenation** | `col1 \|\| col2` | `col1 \|\| col2` | `CONCAT(col1, col2)` | `col1 + col2` |
 
 Full reference: [`notes/quick_reference.md`](./notes/quick_reference.md)
 
 ---
 
-## 🚀 Getting Started
+## 📓 Notes & Reference
 
-**You need:** Any SQL client ([DBeaver](https://dbeaver.io/), [DataGrip](https://www.jetbrains.com/datagrip/), or a terminal) and a database (PostgreSQL, MySQL, or even a local SQLite file).
-
-```bash
-git clone https://github.com/umanggoel21/sql-roadmap.git
-cd sql-roadmap
-```
-Open any `.sql` file from the weekly folders and run it against your database.
+| File | Contents |
+|------|----------|
+| [`notes/common_mistakes.md`](./notes/common_mistakes.md) | 10 most common SQL errors |
+| [`notes/quick_reference.md`](./notes/quick_reference.md) | Multi-dialect syntax cheat sheet |
+| [`notes/execution_order.md`](./notes/execution_order.md) | Complete execution order guide with alias gotchas |
+| [`notes/interview_patterns.md`](./notes/interview_patterns.md) | 20 most common DA interview patterns |
 
 ---
 
