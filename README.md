@@ -27,7 +27,6 @@ This is a **30-day SQL curriculum** that takes you from writing your first `SELE
 ## 📑 Table of Contents
 
 - [📖 Overview](#-overview)
-- [🗄️ Schema](#️-schema)
 - [📅 Week 1 — Foundations](#-week-1--foundations)
 - [📅 Week 2 — Aggregations](#-week-2--aggregations)
 - [📅 Week 3 — Joins & Grouping](#-week-3--joins--grouping)
@@ -38,59 +37,7 @@ This is a **30-day SQL curriculum** that takes you from writing your first `SELE
 - [🚀 Getting Started](#-getting-started)
 - [🤝 Contributing](#-contributing)
 
----
 
-## 🗄️ Schema
-
-Every query in this roadmap runs against a single, consistent E-Commerce schema:
-
-```mermaid
-erDiagram
-    users ||--o{ orders : "places"
-    orders ||--|{ order_items : "contains"
-    products ||--o{ order_items : "referenced_in"
-    employees ||--o{ employees : "reports_to"
-
-    users {
-        int user_id PK
-        varchar email
-        varchar first_name
-        varchar last_name
-        varchar country
-        timestamp created_at
-    }
-    orders {
-        int order_id PK
-        int user_id FK
-        timestamp order_date
-        decimal total_amount
-        varchar status
-    }
-    products {
-        int product_id PK
-        varchar product_name
-        decimal price
-        int category_id FK
-    }
-    order_items {
-        int item_id PK
-        int order_id FK
-        int product_id FK
-        int quantity
-        decimal unit_price
-    }
-    employees {
-        int employee_id PK
-        varchar first_name
-        varchar last_name
-        int reports_to FK
-        varchar title
-    }
-```
-
-**Tables at a glance:** `users` (customers), `orders` (transactions), `products` (catalog), `order_items` (line items), `employees` (staff with self-referencing hierarchy).
-
----
 
 ## 📅 Week 1 — Foundations
 > Source files: [`week1/`](./week1)
