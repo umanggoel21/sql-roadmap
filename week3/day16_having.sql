@@ -1,17 +1,17 @@
 -- ====================================================================
--- DAY 16: Filtering Grouped Records using HAVING
+-- DAY 16: Group filtering using HAVING
 -- ====================================================================
 
--- 🔍 1. Find countries supporting more than 3 active customers
--- HAVING filters *after* GROUP BY aggregation. WHERE cannot do this.
-SELECT Country, COUNT(CustomerId) AS CustomerCount 
-FROM customers 
-GROUP BY Country 
-HAVING CustomerCount > 3;
+-- 🔍 1. Find countries containing more than 50 registered users
+-- HAVING evaluates filters *after* group aggregations are calculated.
+SELECT country, COUNT(user_id) AS user_count 
+FROM users 
+GROUP BY country 
+HAVING COUNT(user_id) > 50;
 
--- 🔍 2. Find albums that contain more than 20 tracks
--- Groups tracks by AlbumId and checks aggregate sizes.
-SELECT AlbumId, COUNT(TrackId) AS TrackCount 
-FROM tracks 
-GROUP BY AlbumId 
-HAVING TrackCount > 20;
+-- 🔍 2. Find product categories having average price exceeding $150
+-- Groups products and aggregates the mean price, filtering group outputs.
+SELECT category_id, AVG(price) AS average_category_price 
+FROM products 
+GROUP BY category_id 
+HAVING AVG(price) > 150.00;

@@ -1,19 +1,20 @@
 -- ====================================================================
--- DAY 1: Database Basics & Declarative SELECT Queries
+-- DAY 1: Core SELECT & Basic Data Retrieval
 -- ====================================================================
 
--- 🔍 1. Select all details for all customers
--- Hits customers table (plural) and returns all columns.
-SELECT * FROM customers;
+-- 🔍 1. Select all columns from the users database
+-- Best Practice: Avoid using "*" in production systems to minimize network payload.
+SELECT * FROM users;
 
--- 🔍 2. Select specific contact details of customers
--- Returns only name and email details, reducing memory bandwidth.
-SELECT FirstName, LastName, Email FROM customers;
+-- 🔍 2. Select specific columns from the products database
+-- Explicitly naming columns increases query stability.
+SELECT product_id, product_name, price FROM products;
 
--- 🔍 3. Count total number of rows in the customer database
--- Essential for checking record volumes.
-SELECT COUNT(*) FROM customers;
+-- 🔍 3. Get total row volume inside the users table
+-- Counts non-null identifiers.
+SELECT COUNT(user_id) AS total_users FROM users;
 
--- 🔍 4. Select billing emails and limit results
--- Returns 10 rows from invoices. Terminated properly with a semicolon.
-SELECT Email, Phone FROM customers LIMIT 10;
+-- 🔍 4. Limit the returned rows to a specific count
+-- Dialect Note: BigQuery, MySQL, PostgreSQL, SQLite use "LIMIT 10".
+-- SQL Server uses: "SELECT TOP 10 product_id FROM products;"
+SELECT product_id, product_name FROM products LIMIT 10;

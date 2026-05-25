@@ -1,19 +1,20 @@
 -- ====================================================================
--- DAY 8: Sorting Records with ORDER BY
+-- DAY 8: Sorting Results using ORDER BY
 -- ====================================================================
 
--- 🔍 1. Sort customers alphabetically by country, then by city
--- ASC is default. Dynamic multi-column sorting rules.
-SELECT Country, City, FirstName, LastName 
-FROM customers 
-ORDER BY Country ASC, City ASC;
+-- 🔍 1. Multi-column sorting: country ASC, registration date DESC
+-- Default sorting direction is ASC. Columns are evaluated left-to-right.
+SELECT country, created_at, email 
+FROM users 
+ORDER BY country ASC, created_at DESC;
 
--- 🔍 2. List tracks sorted by duration, longest first
--- DESC specifies descending order.
-SELECT TrackId, Name, Milliseconds 
-FROM tracks 
-ORDER BY Milliseconds DESC;
+-- 🔍 2. Sort numeric pricing, descending
+-- Orders products from most expensive to cheapest.
+SELECT product_id, product_name, price 
+FROM products 
+ORDER BY price DESC;
 
--- 🔍 3. Sort albums with NULL handling preference (SQLite standard)
--- Null values are sorted first by default in ASC order.
-SELECT Title, ArtistId FROM albums ORDER BY ArtistId ASC;
+-- 🔍 3. Sort ordering with NULL handling
+-- Dialect Note: PostgreSQL supports "NULLS LAST / NULLS FIRST" parameters:
+-- "SELECT email FROM users ORDER BY country ASC NULLS LAST;"
+SELECT email, country FROM users ORDER BY country ASC;

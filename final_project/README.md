@@ -1,9 +1,9 @@
-# 📊 Day 29 & 30: Analytical Capstone Case Studies
+# 📊 Day 29 & 30: E-Commerce Capstone Case Studies
 
-This folder houses the final showcase analysis. It highlights my ability to write production-ready SQL analytical scripts to extract corporate business insights from the Chinook database.
+This folder houses the final analytical queries designed to show high-fidelity business operations analysis.
 
 ## 📈 Analytical Business Questions Solved:
-1. **Lifetime Cohort Revenue Contribution**: Tracking customer lifetime value and mapping it against support performance metrics.
-2. **Monthly Growth Metrics**: Calculating monthly revenue shifts over time.
-3. **Genre Performance and Catalog Audit**: Auditing track catalog length metrics vs revenue contribution.
-4. **Sales Rep Performance Audit**: Auditing sales rep transaction volumes.
+1. **Lifetime Cohort Contribution**: Tracks cumulative order values by registration cohorts.
+2. **Monthly Recurring Revenue (MRR) Growth Velocity**: Calculates revenue pacing and growth rates month-over-month.
+3. **Product Inventory Metrics**: Audits inventory sales yield and margins by categorizing high and low performing products.
+4. **Sales Rep Productivity Audits**: Audits employee support transaction volume metrics.

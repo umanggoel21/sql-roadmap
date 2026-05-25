@@ -1,6 +1,6 @@
 # 📅 Week 1: SQL Fundamentals & Row-Level Filtering
 
-This week focuses on standard declarative querying. I mastered core SELECT calls, specific formatting constraints, NULL filtering, logical compounding (parentheses hierarchy), and pattern matches.
+This week focuses on standard declarative querying. You will master core SELECT calls, specific formatting constraints, NULL filtering, logical compounding (parentheses hierarchy), and pattern matches.
 
 ## 🎓 Core Keywords Acquired
 - `SELECT`, `FROM`, `LIMIT`

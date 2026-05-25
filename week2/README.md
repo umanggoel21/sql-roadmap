@@ -10,4 +10,4 @@ This week progresses from single row manipulation to column calculations and ord
 - Output aliasing (`AS`)
 
 ## 💡 Key Concept Highlight: SQL Aliasing Best Practices
-Always use readable, descriptive aliases with `AS` to present clean columns to dashboard outputs. For instance, rather than displaying `AVG(Milliseconds)`, write `AS AverageTrackDuration`.
+Always use readable, descriptive aliases with `AS` to present clean columns to dashboard outputs. For instance, rather than displaying `AVG(price)`, write `AS average_product_price`.

@@ -1,46 +1,78 @@
-# 📊 Chinook SQL Quest: 30-Day Mastery Journey
-[![SQL](https://img.shields.io/badge/SQL-SQLite-blue.svg)](https://www.sqlite.org/)
-[![Database](https://img.shields.io/badge/Database-Chinook-orange.svg)]()
-[![Status](https://img.shields.io/badge/Status-Certified%20Grandmaster-emerald.svg)]()
+# 📊 Enterprise SQL Roadmap: Zero-to-Hero Mastery
+[![SQL Dialects](https://img.shields.io/badge/SQL-PostgreSQL%20%7C%20MySQL%20%7C%20BigQuery%20%7C%20SQL%20Server%20%7C%20SQLite-blue.svg)]()
+[![Documentation](https://img.shields.io/badge/Docs-Google%20%26%20Meta%20Standard-emerald.svg)]()
+[![Status](https://img.shields.io/badge/Status-Complete-green.svg)]()
 
-Welcome to my **30-Day SQL Mastery Showcase**! 🎓 This repository documents my step-by-step learning progression from basic data retrieval to advanced analytical logic, multi-table joins, subqueries, and database calculations.
+Welcome to the **Enterprise SQL Roadmap**! 🎓 This repository houses an industry-grade, multi-dialect curriculum designed to take you from core declarative data retrieval to complex database design, analytics, cohort segments, and window functions.
 
-All queries are optimized and validated for the **SQLite dialect** targeting the **Chinook Database** schema (an e-commerce music store with customers, invoices, tracks, albums, and employees).
-
----
-
-## 🏆 Program Overview & Stats
-- **Total Days Completed**: 30/30 Days
-- **SQL Variant**: SQLite
-- **Practice Database**: Chinook Music Store Schema
-- **Learning Philosophy**: Hands-on syntax application, clean query formatting, and deep business analytical reasoning.
+Unlike standard tutorials that are tied to a single database schema, this roadmap is **engine-agnostic** and provides side-by-side dialect comparisons for **PostgreSQL, MySQL, SQLite, Microsoft SQL Server (T-SQL), and Google BigQuery**, mirroring the technical rigor of engineering documentation at Google and Meta.
 
 ---
 
-## 🗺️ 30-Day Roadmap & Progress Tracker
+## 🗺️ The 30-Day Zero-to-Hero Syllabus
 
-| Week | Days | Core Focus | Progress | Status |
+| Stage | Days | Focus Area | Key Concepts | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Week 1** | Days 1 - 7 | **SQL Basics & Filtering** (SELECT, WHERE, logical operators, LIKE, BETWEEN, IN) | 100% | [View Folder](./week1) |
-| **Week 2** | Days 8 - 14 | **Sorting, Offsets & Aggregate Mathematics** (ORDER BY, LIMIT, SUM, AVG, COUNT, MIN/MAX) | 100% | [View Folder](./week2) |
-| **Week 3** | Days 15 - 21 | **Groupings & Joins** (GROUP BY, HAVING, INNER JOIN, LEFT JOIN, Self Joins) | 100% | [View Folder](./week3) |
-| **Week 4** | Days 22 - 28 | **Advanced Analytical Logic** (Subqueries, EXISTS, UNION, CASE, Date functions) | 100% | [View Folder](./week4) |
-| **Final** | Days 29 - 30 | **E-Commerce Business Capstone** (Cohort analysis, segment rankings, metrics) | 100% | [View Folder](./final_project) |
+| **Week 1** | Days 1 - 7 | **SQL Foundations & Row Filters** | Declarative logic, three-valued NULL logic, comparison operations, operator precedence, LIKE patterns | 100% Complete |
+| **Week 2** | Days 8 - 14 | **Sorting, Pagination & Aggregates** | Pagination dialects (LIMIT, OFFSET, FETCH NEXT), aggregate math, COALESCE/IFNULL functions, aliasing | 100% Complete |
+| **Week 3** | Days 15 - 21 | **Groupings, Joins & Relationships** | GROUP BY, HAVING vs WHERE, INNER/LEFT/RIGHT/FULL JOIN mechanics, Self-referential hierarchies | 100% Complete |
+| **Week 4** | Days 22 - 28 | **Advanced Analytical SQL** | Nested and correlated subqueries, EXISTS, UNION/INTERSECT sets, CASE logic, Date math, Window Functions | 100% Complete |
+| **Final** | Days 29 - 30 | **Enterprise Case Studies** | Cohort retention, Monthly Recurring Revenue (MRR), representative yields, LeetCode Hard challenges | 100% Complete |
 
 ---
 
-## 🧠 Core Competencies Highlighted
-1. **Dynamic E-Commerce Calculations**: Dynamic conditional aggregations using `CASE WHEN` to bin custom cohorts.
-2. **Advanced Multi-Table Chaining**: Joining 4+ tables (Tracks, Albums, Genres, Invoice_Items) to track global transaction trends.
-3. **Complex Hierarchical Joins**: Self-joining employee tables to map reporting chains.
-4. **Subqueries & Date Math**: Utilizing SQLite native `STRFTIME` and nested subqueries for multi-layered customer analysis.
+## 🏗️ Core E-Commerce Relational Schema
+All examples and exercises throughout this roadmap are mapped to a universal **E-Commerce and Retail Database** schema:
+
+```mermaid
+erDiagram
+    users {
+        int user_id PK
+        varchar email
+        varchar first_name
+        varchar last_name
+        varchar country
+        timestamp created_at
+    }
+    orders {
+        int order_id PK
+        int user_id FK
+        timestamp order_date
+        decimal total_amount
+        varchar status
+    }
+    products {
+        int product_id PK
+        varchar product_name
+        decimal price
+        int category_id FK
+    }
+    order_items {
+        int item_id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        decimal unit_price
+    }
+    employees {
+        int employee_id PK
+        varchar first_name
+        varchar last_name
+        int reports_to FK
+        varchar title
+    }
+    users ||--o{ orders : places
+    orders ||--|{ order_items : contains
+    products ||--o{ order_items : references
+    employees ||--o{ employees : reports_to
+```
 
 ---
 
-## 📂 Quick Navigation
-- 📝 **[Quick Reference Cheat Sheet](./notes/quick_reference.md)**: SQLite keywords and Chinook schema mappings.
-- ⚠️ **[Common SQL Mistakes Guide](./notes/common_mistakes.md)**: Pitfalls, syntax errors, and SQLite edge cases.
-- 🎯 **[LeetCode SQL Solutions](./leetcode/practice.sql)**: Solutions to interview questions.
+## 📂 Quick Navigation Links
+* ⚠️ **[Common SQL Mistakes Guide](./notes/common_mistakes.md)**: Personalized mistakes, null pitfalls, precedence traps, and syntax ordering.
+* 📝 **[Universal SQL Cheat Sheet](./notes/quick_reference.md)**: Side-by-side keywords comparison across 5 major engines.
+* 🎯 **[LeetCode SQL Exercises](./leetcode/practice.sql)**: Solutions to classic industry SQL interview questions.
 
 ---
-*Created as a portfolio asset documenting standard relational database query standards.*
+*Developed as a high-fidelity professional reference and learning template for software engineers and data analysts.*
