@@ -72,7 +72,14 @@ SELECT 'Invoice',                COUNT(*) FROM Invoice;
 
 ### 📊 Chinook Database ER Diagram
 
-Below is the complete database structure you'll be working with. Hover over tables or relationships to see keys and cardinality!
+Below is the complete database structure you'll be working with:
+
+![Chinook Database ERD](./chinook_erd.png)
+
+---
+
+<details>
+<summary><b>🔍 Expand Searchable Mermaid ER Diagram</b></summary>
 
 ```mermaid
 erDiagram
@@ -185,6 +192,8 @@ erDiagram
         int TrackId PK, FK
     }
 ```
+
+</details>
 
 ---
 

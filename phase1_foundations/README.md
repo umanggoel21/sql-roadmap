@@ -44,6 +44,15 @@ InvoiceLine   → Line items inside each invoice (connecting tracks and quantiti
 
 ### Table Relationships (ER Diagram)
 
+Below is the complete database structure you'll be working with:
+
+![Chinook Database ERD](../chinook_erd.png)
+
+---
+
+<details>
+<summary><b>🔍 Expand Searchable Mermaid ER Diagram</b></summary>
+
 ```mermaid
 erDiagram
     Artist ||--o{ Album : "ArtistId"
@@ -155,6 +164,8 @@ erDiagram
         int TrackId PK, FK
     }
 ```
+
+</details>
 
 ---
 
